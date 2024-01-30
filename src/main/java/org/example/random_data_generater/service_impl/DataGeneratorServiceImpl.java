@@ -1,10 +1,12 @@
 package org.example.random_data_generater.service_impl;
 
+import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.random_data_generater.bean.DTO.RequestBean;
 import org.example.random_data_generater.bean.DataGeneratorBean;
 import org.example.random_data_generater.export.CommonWriter;
+
 import org.example.random_data_generater.rule_engine.faker.DataProvider;
 import org.example.random_data_generater.service.DataGeneratorService;
 import org.example.random_data_generater.util.FileUtil;
@@ -59,7 +61,7 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
             count++;
             int blankCount = (rowCount / 100)*dataGeneratorBean.getBlank();
             int reoccurrenceCount = (rowCount / 100) * dataGeneratorBean.getReoccurrence();
-
+            String data = dataProvider.getData(dataGeneratorBean.getTypeData(),dataGeneratorBean);
         }
     }
     private String getOutputPath(RequestBean inputBean) throws IOException {
