@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.random_data_generater.bean.DataGeneratorBean;
+import org.example.random_data_generater.export.ExportFormat;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public class RequestBean {
     private List<DataGeneratorBean>dataGeneratorBeans;
     private String outputPath;
     private  Integer rowCount;
-    private String outputFormat;
+    private ExportFormat outputFormat;
     @Builder.Default private Boolean header=true;
 }

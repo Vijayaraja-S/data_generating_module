@@ -1,6 +1,8 @@
 package org.example.random_data_generater.writer;
 
-import com.opencsv.CSVWriter;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.example.random_data_generater.export.CommonWriter;
 
 
@@ -8,19 +10,21 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class CSVFileWriter implements CommonWriter {
-    private   CSVWriter csvWriter;
-
-    public CSVFileWriter(BufferedWriter writer) {
-        this.csvWriter = new CSVWriter(writer);
+    private   CSVPrinter  csvWriter;
+    public CSVFileWriter(BufferedWriter writer) throws IOException {
+        this.csvWriter = new CSVPrinter(writer, CSVFormat.DEFAULT);
     }
-
     @Override
-    public void HeaderWriter(String[] columns) throws IOException {
-        csvWriter.writeNext(columns);
+    public void headerWriter(Object[] columns) throws IOException {
+        csvWriter.printRecord(columns);
+    }
+    @Override
+    public void dataWriter(Object[] datum) throws IOException {
+        csvWriter.printRecord(datum);
+    }
+    @Override
+    public void close() throws IOException {
         csvWriter.flush();
-    }
-    @Override
-    public void DataWriter(String[] datum) {
-
+        csvWriter.close();
     }
 }

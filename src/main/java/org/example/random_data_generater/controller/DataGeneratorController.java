@@ -14,10 +14,10 @@ import java.io.IOException;
 @RequestMapping("/data_generator")
 @RequiredArgsConstructor
 public class DataGeneratorController {
-    private DataGeneratorService dataGeneratorService;
+    private final DataGeneratorService dataGeneratorService;
     @PostMapping
     public  String createData(@RequestBody RequestBean requestBean) throws IOException {
         dataGeneratorService.createData(requestBean);
-        return "Data Generating.....";
+        return "Data Generated";
     }
 }

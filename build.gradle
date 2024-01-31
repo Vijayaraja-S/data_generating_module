@@ -22,18 +22,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework:spring-web'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter', version: '3.8.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.9'
     implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'org.yaml' }
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.10.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

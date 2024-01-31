@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Service
+
 public interface DataGeneratorService {
     void createData(RequestBean requestBean) throws IOException;
 }

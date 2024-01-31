@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class DataGeneratorBean {
     private String columnName;
-    private ColumnDataInfo columnInfo;
+    private ColumnRules columnRules;
     private TypeData typeData;
-    @Builder.Default private Boolean unique=false;
-    @Builder.Default private int reoccurrence = 0;
-    @Builder.Default private int blank = 0;
+
 }

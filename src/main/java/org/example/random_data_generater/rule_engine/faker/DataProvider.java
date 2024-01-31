@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class DataProvider {
     private final  RuleChecker ruleChecker;
-    private final Faker faker;
-    public   String getData(TypeData dataType, DataGeneratorBean dataGeneratorBean){
-        switch (dataType){
-            case DATE:
-                return ruleChecker.checkWithRule(dataGeneratorBean,faker);
 
-        }
-        return null;
+    public   String getData(TypeData dataType,DataGeneratorBean dataGeneratorBean, Faker faker){
+        return switch (dataType) {
+            case ADDRESS -> faker.address().fullAddress();
+            case CITY -> faker.address().city();
+            case ZIP_CODE -> faker.address().zipCode();
+            case STREET_NAME -> faker.address().streetName();
+            default -> null;
+        };
     }
 }
