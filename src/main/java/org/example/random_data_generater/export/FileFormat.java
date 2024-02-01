@@ -1,5 +1,5 @@
 package org.example.random_data_generater.export;
 
-public enum ExportFormat {
+public enum FileFormat {
     CSV,TXT,XLSX,JSON
 }

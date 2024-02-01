@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.random_data_generater.bean.enums.TypeData;
+
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DataGeneratorBean {
-    private String columnName;
-    private ColumnRules columnRules;
-    private TypeData typeData;
-    }
+public class ExtractedJoinColumnData {
+    private List<Object[]> columnDataList;
+    private  Integer rowCount;
+}

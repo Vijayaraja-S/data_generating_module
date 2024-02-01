@@ -1,11 +1,10 @@
-package org.example.random_data_generater.bean.DTO;
+package org.example.random_data_generater.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.random_data_generater.bean.DataGeneratorBean;
-import org.example.random_data_generater.export.ExportFormat;
+import org.example.random_data_generater.export.FileFormat;
 
 import java.util.List;
 
@@ -17,6 +16,8 @@ public class RequestBean {
     private List<DataGeneratorBean>dataGeneratorBeans;
     private String outputPath;
     private  Integer rowCount;
-    private ExportFormat outputFormat;
+    private FileFormat outputFormat;
+    private boolean isJoinColumn;
+    private List<JoinColumnInfo> joinColumnInfo;
     @Builder.Default private Boolean header=true;
 }

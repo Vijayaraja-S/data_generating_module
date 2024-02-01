@@ -1,4 +1,4 @@
-package org.example.random_data_generater.bean.date_time;
+package org.example.random_data_generater.bean.enums;
 
 import java.io.Serializable;
 

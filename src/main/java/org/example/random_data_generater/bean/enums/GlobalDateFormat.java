@@ -1,4 +1,4 @@
-package org.example.random_data_generater.bean.date_time;
+package org.example.random_data_generater.bean.enums;
 
 import java.io.Serializable;
 
@@ -9,11 +9,7 @@ public enum GlobalDateFormat implements Serializable {
     MM_DD_YYYY("MM/dd/yyyy"),
     MM_YYYY_DD("MM/yyyy/dd"),
     YYYY_DD_MM("yyyy/dd/MM"),
-    ISO_8061_UTC("2023-07-03T09:12:05Z"),
     YYYY_MM_DD("yyyy/MM/dd");
-
-
-
 
     private String value;
 
