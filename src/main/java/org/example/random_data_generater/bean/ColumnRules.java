@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.random_data_generater.bean.enums.CreditCardType;
 import org.example.random_data_generater.bean.enums.GlobalDateFormat;
 
 @Builder
@@ -17,7 +16,7 @@ public class ColumnRules {
     private GlobalDateFormat dataFormat;
     private String fromDate;
     private String toDate;
-    private CreditCardType creditCardType;
+    private String creditCardType;
 //    @Builder.Default private Boolean upperCase=false;
 //    private GlobalTimeFormat timeFormat;
 //    private GlobalDateTimeFormat dateTimeFormat;

@@ -13,8 +13,9 @@ import org.example.random_data_generater.export.FileFormat;
 public class JoinColumnInfo {
     private String filePath;
     private String columnName;
+    private String alterColumnName;
     private Integer ordinalPosition;
-    private boolean isHeader;
+    private Boolean isHeader;
     private FileFormat fileFormat;
     private String delimiter;
 }

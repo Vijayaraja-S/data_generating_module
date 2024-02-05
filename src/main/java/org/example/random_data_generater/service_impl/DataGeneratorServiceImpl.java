@@ -4,9 +4,7 @@ import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.commons.csv.CSVParser;
 import org.example.random_data_generater.bean.DataGeneratorBean;
-import org.example.random_data_generater.bean.ExtractedJoinColumnData;
 import org.example.random_data_generater.bean.JoinColumnInfo;
 import org.example.random_data_generater.bean.RequestBean;
 import org.example.random_data_generater.export.CommonWriter;
@@ -20,6 +18,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -31,18 +30,21 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
 
     @Override
     public void createData(RequestBean requestBean) throws IOException, ParseException {
-        Map<String, ExtractedJoinColumnData> ExtractedJoinColumnDataMap;
-        if (requestBean.isJoinColumn()){
-            ExtractedJoinColumnDataMap = joinColumnService.prepareJoinColumnData(requestBean.getJoinColumnInfo());
-            joinColumnService.getParserAllFiles(requestBean.getJoinColumnInfo());
+        if (requestBean.getIsJoinColumn()){
+            joinColumnService.prepareJoinColumnData(requestBean.getJoinColumnInfo());
         }
-
         writer = writerManager.getWriter(requestBean);
-        Object[] columns = requestBean.getDataGeneratorBeans().stream()
+        List<String> columns = new ArrayList<>(requestBean.getDataGeneratorBeans().stream()
                 .map(DataGeneratorBean::getColumnName)
-                .toArray();
+                .toList());
+        if (requestBean.getIsJoinColumn()){
+            for (JoinColumnInfo joinColumnInfo : requestBean.getJoinColumnInfo()) {
+
+                columns.add(joinColumnInfo.getAlterColumnName());
+            }
+        }
         if (requestBean.getHeader()) {
-            writer.headerWriter(columns);
+            writer.headerWriter(columns.toArray());
         }
         Faker faker = new Faker();
         Integer rowCount = requestBean.getRowCount();
@@ -58,9 +60,9 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
             for (DataGeneratorBean dataGeneratorBean : requestBean.getDataGeneratorBeans()) {
                 columnsDatum.add(generatePerColumnRecords(dataGeneratorBean, row, faker));
             }
-            if(requestBean.isJoinColumn()){
+            if(requestBean.getIsJoinColumn()){
                 for (JoinColumnInfo joinColumnInfo : requestBean.getJoinColumnInfo()) {
-                    columnsDatum.add(joinColumnService.generateColumnRecord(row,joinColumnInfo));
+                    columnsDatum.add(joinColumnService.getColumData(row,joinColumnInfo));
                 }
             }
             Object[][] objects = preparingRowData(columnsDatum, row);
@@ -72,7 +74,6 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
                 writer.dataWriter(object);
             }
         }
-        // all the parser should close properly
         writer.close();
     }
 
@@ -87,19 +88,20 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
         return resultArray;
     }
 
-
     private Object[] generatePerColumnRecords(DataGeneratorBean dataGeneratorBean, Integer rowCount, Faker faker) throws ParseException {
         int blankCount = (rowCount / 100) * dataGeneratorBean.getColumnRules().getBlank();
         int reoccurrenceCount = (rowCount / 100) * dataGeneratorBean.getColumnRules().getReoccurrence();
         int actual_count = rowCount - (blankCount + reoccurrenceCount);
         ArrayList<String> column_datum = new ArrayList<>();
         Random random = new Random();
+        // actual count
         if (actual_count>0){
             for (int i = 0; i < actual_count; i++) {
                 String data = dataProvider.getData(dataGeneratorBean.getTypeData(), dataGeneratorBean, faker);
                 column_datum.add(data);
             }
         }
+        // reoccurrence
         if (reoccurrenceCount > 0) {
             if (dataGeneratorBean.getColumnRules().getReoccurrence()==100){
                 String data = dataProvider.getData(dataGeneratorBean.getTypeData(), dataGeneratorBean, faker);
@@ -113,6 +115,7 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
                 }
             }
         }
+        // blankCount
         if (blankCount > 0) {
             if (dataGeneratorBean.getColumnRules().getBlank()==100){
                 for (int i = 0; i < blankCount; i++) {

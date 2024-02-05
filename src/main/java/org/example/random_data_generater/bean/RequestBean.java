@@ -17,7 +17,9 @@ public class RequestBean {
     private String outputPath;
     private  Integer rowCount;
     private FileFormat outputFormat;
-    private boolean isJoinColumn;
+    @Builder.Default private Boolean isJoinColumn=false;
     private List<JoinColumnInfo> joinColumnInfo;
     @Builder.Default private Boolean header=true;
+
+
 }

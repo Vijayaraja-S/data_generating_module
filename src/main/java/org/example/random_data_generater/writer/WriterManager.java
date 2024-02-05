@@ -46,7 +46,7 @@ public class WriterManager {
         return jobFolder + File.separator + "DUMMY_DATA" + UUID.randomUUID() + ".csv";
     }
     public boolean checkFileSize() throws IOException {
-        return Files.size(Path.of(outputPath)) > 100000;
+        return Files.size(Path.of(outputPath)) > 1000000;
     }
     public CommonWriter getFiles(RequestBean requestBean){
         outputPath = jobFolder + File.separator + "DUMMY_DATA" + UUID.randomUUID() + ".csv";

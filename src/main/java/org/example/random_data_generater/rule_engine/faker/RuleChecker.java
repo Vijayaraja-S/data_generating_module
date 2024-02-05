@@ -1,5 +1,6 @@
 package org.example.random_data_generater.rule_engine.faker;
 
+import com.github.javafaker.CreditCardType;
 import com.github.javafaker.Faker;
 
 import java.text.DateFormat;
@@ -19,8 +20,27 @@ public class RuleChecker {
         switch (dataGeneratorBean.getTypeData()){
             case DATE:
                 return checkDateRule(columnInfo.getDataFormat(),columnInfo.getFromDate(),columnInfo.getToDate(),faker);
+            case CREDIT_CARD:
+                return checkCreditCardRule(columnInfo.getCreditCardType(),faker);
+            case GENDER:
+                return generateGenderData(faker);
         }
         return null;
+    }
+
+    private String generateGenderData(Faker faker) {
+        int random = faker.number().numberBetween(0, 1);
+        String gender;
+        if (random == 0) {
+            gender = "MALE";
+        } else {
+            gender = "FEMALE";
+        }
+        return gender;
+    }
+
+    private String checkCreditCardRule(String creditCardType, Faker faker) {
+        return faker.finance().creditCard(CreditCardType.valueOf(creditCardType));
     }
 
     private String checkDateRule(GlobalDateFormat dataFormat,

@@ -6,30 +6,24 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.example.random_data_generater.bean.ExtractedJoinColumnData;
 import org.example.random_data_generater.bean.JoinColumnInfo;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Component
 public class JoinColumnService {
+    Map<String, ExtractedJoinColumnData> joinColumnData = new HashMap<>();
 
-    private Map<String,CSVParser> columnParserMap = new HashMap<>();
-    private Map<String,Integer> offsetTracker = new HashMap<>() ;
-
-    public Map<String, ExtractedJoinColumnData> prepareJoinColumnData(List<JoinColumnInfo> joinColumnInfos) throws IOException {
-        Map<String, ExtractedJoinColumnData> joinColumnData = new HashMap<>();
+    public void prepareJoinColumnData(List<JoinColumnInfo> joinColumnInfos) throws IOException {
         int ordinalPosition;
         for (JoinColumnInfo joinColumnInfo : joinColumnInfos) {
             if (joinColumnInfo.getOrdinalPosition() != null) {
@@ -37,7 +31,7 @@ public class JoinColumnService {
                 ExtractedJoinColumnData csvColumnData = getCSVColumnData(joinColumnInfo, ordinalPosition);
                 joinColumnData.put(joinColumnInfo.getColumnName(),csvColumnData);
             } else {
-                if (joinColumnInfo.isHeader()) {
+                if (joinColumnInfo.getIsHeader()) {
                     if (!joinColumnInfo.getColumnName().isEmpty()) {
                         ordinalPosition = fetchOrdinalPosition(joinColumnInfo.getColumnName(), joinColumnInfo.getFilePath());
                         ExtractedJoinColumnData csvColumnData = getCSVColumnData(joinColumnInfo, ordinalPosition);
@@ -49,33 +43,25 @@ public class JoinColumnService {
                     throw new IllegalArgumentException("provide column name or ordinal position");
             }
         }
-        return joinColumnData;
-    }
-    public void getParserAllFiles(List<JoinColumnInfo>joinColumnInfos) throws IOException {
-        for (JoinColumnInfo joinColumnInfo : joinColumnInfos) {
-            // check format before parse
-            offsetTracker.put(joinColumnInfo.getColumnName(),0);
-            columnParserMap.put(joinColumnInfo.getColumnName(), getCsvParser(joinColumnInfo.getFilePath()));
-        }
-    }
-
-    private CSVParser getCsvParser(String filePath) throws IOException {
-            return new CSVParser(new FileReader(filePath), CSVFormat.DEFAULT);
     }
 
     private ExtractedJoinColumnData getCSVColumnData(JoinColumnInfo joinColumnInfo, int ordinalPosition) {
         try(CSVParser parser = new CSVParser(new FileReader(joinColumnInfo.getFilePath()), CSVFormat.DEFAULT)){
-            int rowCount = 0;
             ExtractedJoinColumnData extractedBean = ExtractedJoinColumnData.builder().build();
-            List<String> columData = new ArrayList<>();
-            for (CSVRecord record : parser) {rowCount++;
-                if (columData.size()>999){
-                    extractedBean.getColumnDataList().add(columData.toArray());
-                    columData.clear();
+            int row=0;
+            ArrayList<String> objects = new ArrayList<>();
+            for (CSVRecord record : parser) {
+                row++;
+                String value = String.valueOf(record.get(ordinalPosition));
+                if (!StringUtils.isBlank(value) && row>1){
+                    objects.add(value);
                 }
-                columData.add(record.get(ordinalPosition));
+                if (objects.size()>10000){
+                    break;
+                }
             }
-            extractedBean.setRowCount(rowCount);
+            parser.close();
+            extractedBean.setColumnDataList(objects);
             return extractedBean;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -96,31 +82,14 @@ public class JoinColumnService {
         }
     }
 
-    public Object[] generateColumnRecord(int row, JoinColumnInfo joinColumnInfo) throws IOException {
-        int ordinalPosition;
-        if (joinColumnInfo.getOrdinalPosition() != null) {
-            ordinalPosition = joinColumnInfo.getOrdinalPosition();
-            return fetchCSVColumnData(joinColumnInfo, ordinalPosition,row);
-        } else {
-            if (joinColumnInfo.isHeader()) {
-                if (!joinColumnInfo.getColumnName().isEmpty()) {
-                    ordinalPosition = fetchOrdinalPosition(joinColumnInfo.getColumnName(), joinColumnInfo.getFilePath());
-                   return fetchCSVColumnData(joinColumnInfo, ordinalPosition,row);
-                }
-                else
-                    throw new IllegalArgumentException("provide column name ");
-            }else
-                throw new IllegalArgumentException("provide column name or ordinal position");
+    public Object[] getColumData(int row, JoinColumnInfo joinColumnInfo) {
+        Random random = new Random();
+        ExtractedJoinColumnData extractedJoinColumnData = joinColumnData.get(joinColumnInfo.getColumnName());
+        List<String> columnDatum = new ArrayList<>();
+        for (int i = 0; i <  row; i++) {
+            int j = random.nextInt(0, extractedJoinColumnData.getColumnDataList().size());
+            columnDatum.add(extractedJoinColumnData.getColumnDataList().get(j));
         }
-
-    }
-
-    private Object[] fetchCSVColumnData(JoinColumnInfo joinColumnInfo, int ordinalPosition, int row) {
-        CSVParser parser = columnParserMap.get(joinColumnInfo.getColumnName());
-
-        for (CSVRecord record : parser) {
-            String value = record.get(ordinalPosition);
-        }
-
+        return columnDatum.toArray();
     }
 }
