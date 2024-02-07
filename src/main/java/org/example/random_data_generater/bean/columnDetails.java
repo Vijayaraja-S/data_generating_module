@@ -10,8 +10,10 @@ import org.example.random_data_generater.bean.enums.TypeData;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DataGeneratorBean {
+public class columnDetails {
     private String columnName;
     private ColumnRules columnRules;
     private TypeData typeData;
-    }
+}
+//1.column name validation more than once or not .
+

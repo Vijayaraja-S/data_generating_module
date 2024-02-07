@@ -1,20 +1,19 @@
 package org.example.random_data_generater.bean.enums;
 
 public enum TypeData {
-     DATE,
      ADDRESS,
-     CITY,
-     STREET_NAME,
-     ZIP_CODE,
-     ROW_NUMBER,
+     BLOB,
+     CREDIT_CARD,CITY,
+     DATE,DECIMAL,
      EMAIL,
+     FIRST_NAME,FULL_NAME,
      GENDER,
-     FIRST_NAME,
      LAST_NAME,
-     FULL_NAME,
-     PHONE_NUMBER,
-     PASSWORD_HASHCODE,
-     SHA_256_HASHCODE,
-     CREDIT_CARD
+     PHONE_NUMBER, PASSWORD, PARAGRAPH,
+     ROW_NUMBER,
+     STREET_NAME,SHA_256_HASHCODE,SENTENCE,
+     TIMESTAMP_TIMEZONE,TIMESTAMP,
+     WORDS,
+     ZIP_CODE,
 
 }

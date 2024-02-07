@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.random_data_generater.bean.enums.GlobalDateFormat;
+import org.example.random_data_generater.bean.enums.Timezone;
 
 @Builder
 @AllArgsConstructor
@@ -17,6 +18,9 @@ public class ColumnRules {
     private String fromDate;
     private String toDate;
     private String creditCardType;
+    @Builder.Default private String fromTimestampDate = "2012-01-01";
+    @Builder.Default private String toTimestampDate = "2015-01-01";
+    @Builder.Default private Timezone timezone = Timezone.IST;
 //    @Builder.Default private Boolean upperCase=false;
 //    private GlobalTimeFormat timeFormat;
 //    private GlobalDateTimeFormat dateTimeFormat;

@@ -2,6 +2,7 @@ package org.example.random_data_generater.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.random_data_generater.bean.RequestBean;
+import org.example.random_data_generater.exception.InvalidInputException;
 import org.example.random_data_generater.service.DataGeneratorService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ import java.text.ParseException;
 public class DataGeneratorController {
     private final DataGeneratorService dataGeneratorService;
     @PostMapping
-    public  String createData(@RequestBody RequestBean requestBean) throws IOException, ParseException {
+    public  String createData(@RequestBody RequestBean requestBean) throws IOException, ParseException, InvalidInputException {
         dataGeneratorService.createData(requestBean);
         return "Data Generated";
     }

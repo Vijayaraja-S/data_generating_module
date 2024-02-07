@@ -13,13 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class RequestBean {
-    private List<DataGeneratorBean>dataGeneratorBeans;
+    private List<columnDetails> columnDetails;
     private String outputPath;
     private  Integer rowCount;
     private FileFormat outputFormat;
+    private String databaseName;
+    private String schemaName;
+    private String tableName;
     @Builder.Default private Boolean isJoinColumn=false;
     private List<JoinColumnInfo> joinColumnInfo;
     @Builder.Default private Boolean header=true;
-
-
 }
