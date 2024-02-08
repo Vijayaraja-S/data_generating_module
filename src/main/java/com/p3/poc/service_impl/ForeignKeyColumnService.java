@@ -1,5 +1,7 @@
-package org.example.random_data_generater.service_impl;
+package com.p3.poc.service_impl;
 
+import com.p3.poc.bean.ForeignKeyColumnsInfo;
+import com.p3.poc.exception.InvalidInputException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +10,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
-import org.example.random_data_generater.bean.ExtractedJoinColumnData;
-import org.example.random_data_generater.bean.JoinColumnInfo;
-import org.example.random_data_generater.exception.InvalidInputException;
+import com.p3.poc.bean.ExtractedJoinColumnData;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -23,37 +23,37 @@ import java.util.*;
 @Data
 @Component
 @Slf4j
-public class JoinColumnService {
+public class ForeignKeyColumnService {
     Map<String, ExtractedJoinColumnData> joinColumnData = new HashMap<>();
 
-    public void prepareJoinColumnData(List<JoinColumnInfo> joinColumnInfos) throws IOException {
+    public void prepareJoinColumnData(List<ForeignKeyColumnsInfo> joinColumnInfos) throws IOException {
         int ordinalPosition;
-        for (JoinColumnInfo joinColumnInfo : joinColumnInfos) {
+        for (ForeignKeyColumnsInfo joinColumnInfo : joinColumnInfos) {
             if (joinColumnInfo.getOrdinalPosition() != null) {
                 ordinalPosition = joinColumnInfo.getOrdinalPosition();
                 ExtractedJoinColumnData csvColumnData = getCSVColumnData(joinColumnInfo, ordinalPosition);
-                joinColumnData.put(joinColumnInfo.getColumnName(),csvColumnData);
+                joinColumnData.put(joinColumnInfo.getReferenceColumnName(),csvColumnData);
             } else {
-                if (joinColumnInfo.getIsHeader()) {
-                    if (!joinColumnInfo.getColumnName().isEmpty()) {
-                        ordinalPosition = fetchOrdinalPosition(joinColumnInfo.getColumnName(), joinColumnInfo.getFilePath());
-                        ExtractedJoinColumnData csvColumnData = getCSVColumnData(joinColumnInfo, ordinalPosition);
-                        joinColumnData.put(joinColumnInfo.getColumnName(),csvColumnData);
-                    }
-                    else{
-                        log.error("provide column name");
-                        throw new IllegalArgumentException("provide column name ");
-                    }
-                }else{
-                    log.error("provide column name or ordinal position");
-                    throw new IllegalArgumentException("provide column name or ordinal position");
-                }
+//                if (joinColumnInfo.getIsHeader()) {
+//                    if (!joinColumnInfo.getReferenceColumnName().isEmpty()) {
+//                        ordinalPosition = fetchOrdinalPosition(joinColumnInfo.getReferenceColumnName(), joinColumnInfo.getReferenceFilePath());
+//                        ExtractedJoinColumnData csvColumnData = getCSVColumnData(joinColumnInfo, ordinalPosition);
+//                        joinColumnData.put(joinColumnInfo.getReferenceColumnName(),csvColumnData);
+//                    }
+//                    else{
+//                        log.error("provide column name");
+//                        throw new IllegalArgumentException("provide column name ");
+////                    }
+//                }else{
+//                    log.error("provide column name or ordinal position");
+//                    throw new IllegalArgumentException("provide column name or ordinal position");
+//                }
             }
         }
     }
 
-    private ExtractedJoinColumnData getCSVColumnData(JoinColumnInfo joinColumnInfo, int ordinalPosition) {
-        try(CSVParser parser = new CSVParser(new FileReader(joinColumnInfo.getFilePath()), CSVFormat.DEFAULT)){
+    private ExtractedJoinColumnData getCSVColumnData(ForeignKeyColumnsInfo joinColumnInfo, int ordinalPosition) {
+        try(CSVParser parser = new CSVParser(new FileReader(joinColumnInfo.getReferenceFilePath()), CSVFormat.DEFAULT)){
             ExtractedJoinColumnData extractedBean = ExtractedJoinColumnData.builder().build();
             int row=0;
             ArrayList<String> objects = new ArrayList<>();
@@ -95,9 +95,9 @@ public class JoinColumnService {
         }
     }
 
-    public Object[] getColumData(int row, JoinColumnInfo joinColumnInfo) {
+    public Object[] getColumData(int row, ForeignKeyColumnsInfo joinColumnInfo) {
         Random random = new Random();
-        ExtractedJoinColumnData extractedJoinColumnData = joinColumnData.get(joinColumnInfo.getColumnName());
+        ExtractedJoinColumnData extractedJoinColumnData = joinColumnData.get(joinColumnInfo.getReferenceColumnName());
         List<String> columnDatum = new ArrayList<>();
         for (int i = 0; i <  row; i++) {
             int j = random.nextInt(0, extractedJoinColumnData.getColumnDataList().size());

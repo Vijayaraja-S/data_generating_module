@@ -1,7 +1,7 @@
 package com.p3.poc.controller;
 
 import lombok.RequiredArgsConstructor;
-import com.p3.poc.bean.RequestBean;
+import com.p3.poc.bean.DataGeneratorBean;
 import com.p3.poc.exception.InvalidInputException;
 import com.p3.poc.service.DataGeneratorService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +18,12 @@ import java.text.ParseException;
 public class DataGeneratorController {
     private final DataGeneratorService dataGeneratorService;
     @PostMapping
-    public  String createData(@RequestBody RequestBean requestBean) throws IOException, ParseException, InvalidInputException {
+    public  String createData(@RequestBody DataGeneratorBean requestBean) throws Exception {
         dataGeneratorService.createData(requestBean);
         return "Data Generated";
+    }
+    @PostMapping
+    public String inputValidation(@RequestBody DataGeneratorBean requestBean) throws IOException, ParseException, InvalidInputException {
+        return dataGeneratorService.beanValidation(requestBean);
     }
 }

@@ -1,26 +1,28 @@
 package com.p3.poc.bean.enums;
 
+import com.p3.export.specifics.DataType;
+
 public enum TypeData {
-     ADDRESS("STRING"),
-     BLOB("BLOB"),
-     CREDIT_CARD("NUMBER"), CITY("STRING"),
-     DATE("DATE"),DECIMAL("DECIMAL"),
-     EMAIL("STRING"),
-     FIRST_NAME("STRING"),FULL_NAME("STRING"),
-     GENDER("STRING"),
-     LAST_NAME("STRING"),
-     PHONE_NUMBER("NUMBER"), PASSWORD("STRING"), PARAGRAPH("STRING"),
-     ROW_NUMBER("NUMBER"),
-     STREET_NAME("STRING"),SHA_256_HASHCODE("STRING"),SENTENCE("STRING"),
-     TIMESTAMP_TIMEZONE("DATETIME"),TIMESTAMP("DATETIME"),
-     WORDS("STRING"),
-     ZIP_CODE("NUMBER"),
+     ADDRESS(DataType.STRING),
+     BLOB(DataType.BLOB),
+     CREDIT_CARD(DataType.NUMBER), CITY(DataType.STRING),
+     DATE(DataType.DATE),DECIMAL(DataType.DECIMAL),
+     EMAIL(DataType.STRING),
+     FIRST_NAME(DataType.STRING),FULL_NAME(DataType.STRING),
+     GENDER(DataType.STRING),
+     LAST_NAME(DataType.STRING),
+     PHONE_NUMBER(DataType.NUMBER), PASSWORD(DataType.STRING), PARAGRAPH(DataType.STRING),
+     ROW_NUMBER(DataType.NUMBER),
+     STREET_NAME(DataType.STRING),SHA_256_HASHCODE(DataType.STRING),SENTENCE(DataType.STRING),
+     TIMESTAMP_TIMEZONE(DataType.DATETIME),TIMESTAMP( DataType.DATETIME),
+     WORDS(DataType.STRING),
+     ZIP_CODE(DataType.NUMBER),
      ;
-     private String dataType;
-     TypeData(final String dataType) {
+     private DataType dataType;
+     TypeData(final DataType dataType) {
           this.dataType=dataType;
      }
-     public String getDataType() {
+     public DataType getDataType() {
           return this.dataType;
      }
 }

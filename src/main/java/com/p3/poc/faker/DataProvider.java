@@ -1,10 +1,10 @@
-package org.example.random_data_generater.rule_engine.faker;
+package com.p3.poc.faker;
 
 import com.github.javafaker.Faker;
+import com.p3.poc.bean.ColumnEntity;
+import com.p3.poc.bean.enums.TypeData;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.example.random_data_generater.bean.columnDetails;
-import org.example.random_data_generater.bean.enums.TypeData;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -14,7 +14,7 @@ import java.text.ParseException;
 public class DataProvider {
     private final  RuleChecker ruleChecker;
 
-    public   String getData(TypeData dataType, columnDetails dataGeneratorBean, Faker faker) throws ParseException {
+    public   String getData(TypeData dataType, ColumnEntity dataGeneratorBean, Faker faker) throws ParseException {
 
         return switch (dataType) {
             case CREDIT_CARD, DATE,GENDER,TIMESTAMP,TIMESTAMP_TIMEZONE-> ruleChecker.checkWithRule(dataGeneratorBean,faker);
@@ -32,11 +32,7 @@ public class DataProvider {
             case STREET_NAME -> faker.address().streetName();
             case ZIP_CODE -> faker.address().zipCode();
             case SENTENCE -> faker.lorem().sentence();
-                //phrase insert
-                // date,timestamp with time zone, without time zone , decimal, blob data
-                // metadataGeneration
-                //
-                    default -> null;
+            default -> null;
         };
     }
 }
