@@ -13,7 +13,6 @@ import com.p3.poc.bean.enums.TypeData;
 public class ColumnEntity {
     private String name;
     private Boolean isPrimaryKey;
-
     private TypeData typeData;
     private ColumnRules columnRules;
 

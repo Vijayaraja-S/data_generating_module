@@ -16,36 +16,47 @@ import com.p3.poc.exception.InvalidInputException;
 import com.p3.poc.faker.DataProvider;
 import com.p3.poc.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
-@Builder
 public class DataGeneratorServiceImpl implements DataGeneratorService {
     private final ForeignKeyColumnService joinColumnService;
     private final ExportProcess exportProcess;
     private final DataProcessor dataProcessor;
-    @Builder.Default
-    private Boolean validation = false;
+
+
 
     @Override
     public void createData(DataGeneratorBean requestBean) throws Exception {
         List<WriterBean> writerBeanList = exportProcess.getExportEngineList(requestBean);
         Faker faker = new Faker();
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (TableEntity tableInfo : requestBean.getTableInfos()) {
             WriterBean wBean = writerBeanList.stream().filter(writerBean -> writerBean.getTableName().
                             equalsIgnoreCase(tableInfo.getTableName()))
                     .findFirst().orElse(null);
-            dataProcessor.startDataGeneration(tableInfo, tableInfo.getTotalRowCount(), faker, wBean);
+            if (!executorService.isShutdown()) {
+                Callable<Object> callableThreadTask = () -> processTask(tableInfo, tableInfo.getTotalRowCount(), faker, wBean);
+            }
         }
+        executorService.shutdown();
+    }
+
+    private Object processTask(TableEntity tableInfo, Integer totalRowCount, Faker faker, WriterBean wBean) throws Exception {
+        return dataProcessor.startDataGeneration(tableInfo,totalRowCount,faker,wBean);
     }
 
     @Override
@@ -75,7 +86,6 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
                 throw new InvalidInputException(String.format("duplicate columns are present [%s] this table %s", duplicateElements, tableInfo.getTableName()));
             }
         }
-        validation = true;
         return "validation successfully completed";
     }
 
