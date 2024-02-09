@@ -1,32 +1,41 @@
 package com.p3.poc.service_impl;
-
 import com.github.javafaker.Faker;
 import com.p3.poc.bean.ColumnEntity;
-import com.p3.poc.bean.ForeignKeyColumnsInfo;
 import com.p3.poc.bean.TableEntity;
 import com.p3.poc.bean.writer.WriterBean;
 import com.p3.poc.faker.DataProvider;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-@Service
 @Slf4j
-@RequiredArgsConstructor
-@Builder
-public class DataProcessor {
-
+public class DataProcessor implements Runnable {
     private final DataProvider dataProvider;
+    private final TableEntity tableEntity;
+    private Integer rowCount;
+    private final WriterBean writerBean;
+    private final Faker faker;
 
-    public String startDataGeneration(TableEntity tableInfo, Integer rowCount, Faker faker, WriterBean writerBean) throws Exception {
+    public DataProcessor(DataProvider dataProvider, TableEntity tableEntity, Integer rowCount, WriterBean writerBean, Faker faker) {
+        this.dataProvider = dataProvider;
+        this.tableEntity = tableEntity;
+        this.rowCount = rowCount;
+        this.writerBean = writerBean;
+        this.faker = faker;
+    }
+    @Override
+    public void run() {
+        try {
+            startDataGeneration();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void startDataGeneration() throws Exception {
         int row = 0;
         while (rowCount > 0) {
             if (rowCount > 1000) {
@@ -36,7 +45,7 @@ public class DataProcessor {
             }
             rowCount = rowCount - 1000;
             List<Object[]> columnsDatum = new ArrayList<>();
-            for (ColumnEntity dataGeneratorBean : tableInfo.getColumnDetails()) {
+            for (ColumnEntity dataGeneratorBean : tableEntity.getColumnDetails()) {
                 columnsDatum.add(generateSingleColumnRecords(dataGeneratorBean, row, faker));
             }
 //            if (tableInfo.getIsForeignKeyPresent()) {
@@ -50,7 +59,6 @@ public class DataProcessor {
             }
         }
         writerBean.getExportEngine().handleDataEnd();
-        return StringUtils.EMPTY;
     }
 
     private Object[][] preparingRowData(List<Object[]> columnsDatum, int rows) {

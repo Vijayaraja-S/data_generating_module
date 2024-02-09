@@ -14,7 +14,7 @@ import com.p3.poc.bean.enums.Timezone;
 public class ColumnRules {
     @Builder.Default private int reoccurrence = 0;
     @Builder.Default private int blank = 0;
-    private GlobalDateFormat dataFormat;
+    private GlobalDateFormat dateFormat;
     private String fromDate;
     private String toDate;
     private String creditCardType;

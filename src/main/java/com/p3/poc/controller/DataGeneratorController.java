@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 @RestController
 @RequestMapping("/data_generator")
@@ -22,8 +21,8 @@ public class DataGeneratorController {
         dataGeneratorService.createData(requestBean);
         return "Data Generated";
     }
-    @PostMapping
-    public String inputValidation(@RequestBody DataGeneratorBean requestBean) throws IOException, ParseException, InvalidInputException {
+    @PostMapping("/validation")
+    public String inputValidation(@RequestBody DataGeneratorBean requestBean) throws IOException, InvalidInputException {
         return dataGeneratorService.beanValidation(requestBean);
     }
 }

@@ -7,9 +7,11 @@ import com.p3.poc.bean.DataGeneratorBean;
 import com.p3.poc.bean.ForeignKeyColumnsInfo;
 import com.p3.poc.bean.TableEntity;
 import com.p3.poc.bean.writer.WriterBean;
+import com.p3.poc.util.FileUtil;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +47,11 @@ public class ExportProcess {
         return prepareColumnInfolist;
     }
 
-    private String getBasePath(DataGeneratorBean requestBean, String tableName) {
-        return requestBean.getOutputPath() + File.separator + requestBean.getDatabaseName()
+    private String getBasePath(DataGeneratorBean requestBean, String tableName) throws IOException {
+        String folderPath =  requestBean.getOutputPath() + File.separator + requestBean.getDatabaseName()
                 + File.separator + requestBean.getSchemaName() + File.separator + tableName;
+        FileUtil.checkCreateDirectory(folderPath);
+        return folderPath;
     }
 
     public List<ColumnInfo> prepareColumInfoList(List<ColumnEntity> columnDetails) {

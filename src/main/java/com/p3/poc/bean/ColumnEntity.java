@@ -15,10 +15,6 @@ public class ColumnEntity {
     private Boolean isPrimaryKey;
     private TypeData typeData;
     private ColumnRules columnRules;
-
-
-
-
     private Integer ordinal;
     private String type;
     private Integer typeLength;

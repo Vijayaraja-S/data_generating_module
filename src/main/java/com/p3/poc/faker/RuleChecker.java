@@ -23,7 +23,7 @@ public class RuleChecker {
         ColumnRules columnInfo = dataGeneratorBean.getColumnRules();
         switch (dataGeneratorBean.getTypeData()){
             case DATE:
-                return checkDateRule(columnInfo.getDataFormat(),columnInfo.getFromDate(),columnInfo.getToDate(),faker);
+                return checkDateRule(columnInfo.getDateFormat(),columnInfo.getFromDate(),columnInfo.getToDate(),faker);
             case CREDIT_CARD:
                 return checkCreditCardRule(columnInfo.getCreditCardType(),faker);
             case GENDER:

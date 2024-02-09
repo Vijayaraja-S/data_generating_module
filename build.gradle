@@ -26,10 +26,6 @@ dependencies {
 
     //implementations
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.50' // Changed Tomcat 9 version
-    implementation 'org.apache.tomcat.embed:tomcat-embed-el:9.0.50'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.50'
-
 
     implementation 'org.apache.parquet:parquet-hadoop:1.10.1'
     implementation('com.github.javafaker:javafaker:1.0.2') { exclude module: 'org.yaml' }
@@ -38,12 +34,11 @@ dependencies {
     implementation group: 'org.apache.poi', name: 'poi', version: '3.17'
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
     implementation 'org.zeroturnaround:zt-zip:1.14'
-    implementation 'org.apache.hadoop:hadoop-core:1.2.1'
+    implementation group: 'org.apache.hadoop', name: 'hadoop-client', version: '3.3.5'
     implementation group: 'org.apache.xmlgraphics', name: 'fop', version: '2.8'
     implementation group: 'org.json', name: 'json', version: '20230618'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
     implementation 'com.google.googlejavaformat:google-java-format:1.16.0'
-    implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 
     //compileOnly
     compileOnly 'org.projectlombok:lombok'
