@@ -46,7 +46,7 @@ public class DataGeneratorServiceImpl implements DataGeneratorService {
                     .filter(writerBean -> writerBean.getTableName().equalsIgnoreCase(tableInfo.getTableName()))
                     .findFirst()
                     .orElse(null);
-            callableList.add(Executors.callable(new DataProcessor(dataProvider, tableInfo, tableInfo.getTotalRowCount(), wBean, faker)));
+            callableList.add(Executors.callable(new DataProcessor(dataProvider, tableInfo, tableInfo.getTotalRowCount(), wBean, faker,exportProcess,requestBean)));
         }
         if (!executorService.isShutdown()) {
             executorService.invokeAll(callableList);

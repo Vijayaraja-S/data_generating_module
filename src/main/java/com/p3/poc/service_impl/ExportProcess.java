@@ -22,23 +22,32 @@ public class ExportProcess {
         List<WriterBean> writerBeans = new ArrayList<>();
         for (TableEntity tableInfo : requestBean.getTableInfos()) {
             List<ColumnInfo> prepareColumnInfolist = getColumnInfoList(tableInfo);
-            ExportEngine ee = ExportEngine.builder()
-                    .exportFormat(requestBean.getOutputFormat())
-                    .basePath(getBasePath(requestBean, tableInfo.getTableName()))
-                    .columnsInfo(prepareColumnInfolist)
-                    .title(requestBean.getSchemaName() + "-" + tableInfo.getTableName())
-                    .build();
-            ee.initialize();
-            ee.handleDataStart();
-            writerBeans.add(WriterBean.builder().tableName(tableInfo.getTableName()).exportEngine(ee).build());
+            writerBeans.add(
+                    WriterBean.builder()
+                    .tableName(tableInfo.getTableName())
+                    .exportEngine(getExportEngine(requestBean, tableInfo, prepareColumnInfolist))
+                    .build()
+            );
         }
         return writerBeans;
     }
 
-    private List<ColumnInfo> getColumnInfoList(TableEntity tableInfo) {
+    public ExportEngine getExportEngine(DataGeneratorBean requestBean, TableEntity tableInfo, List<ColumnInfo> prepareColumnInfolist) throws Exception {
+        ExportEngine ee = ExportEngine.builder()
+                .exportFormat(requestBean.getOutputFormat())
+                .basePath(getBasePath(requestBean, tableInfo.getTableName()))
+                .columnsInfo(prepareColumnInfolist)
+                .title(requestBean.getSchemaName() + "-" + tableInfo.getTableName())
+                .build();
+        ee.initialize();
+        ee.handleDataStart();
+        return ee;
+    }
+
+    public List<ColumnInfo> getColumnInfoList(TableEntity tableInfo) {
         List<ColumnInfo> prepareColumnInfolist;
         // check foreignKey columns present or not
-        if (tableInfo.getIsForeignKeyPresent()) {
+        if (Boolean.TRUE.equals(tableInfo.getIsForeignKeyPresent())) {
             prepareColumnInfolist = prepareColumInfoList(tableInfo.getColumnDetails(),
                     tableInfo.getForeignKeyColumnsInfos());
         }else{
