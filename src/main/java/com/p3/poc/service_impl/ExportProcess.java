@@ -17,7 +17,6 @@ import java.util.List;
 
 @Component
 public class ExportProcess {
-
     public List<WriterBean> getExportEngineList(DataGeneratorBean requestBean) throws Exception {
         List<WriterBean> writerBeans = new ArrayList<>();
         for (TableEntity tableInfo : requestBean.getTableInfos()) {

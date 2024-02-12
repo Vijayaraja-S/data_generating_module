@@ -96,9 +96,12 @@ public class DataProcessor implements Runnable {
         }
 
         List<Object> columnDatum = generateUniqueData(column, faker, uniqueCount);
-        addReoccurrenceData(columnDatum, column, faker, reoccurrenceCount);
-        addBlankData(columnDatum, column,blankCount);
-
+        if (reoccurrenceCount>0){
+            addReoccurrenceData(columnDatum, column, faker, reoccurrenceCount);
+        }
+        if (blankCount>0){
+            addBlankData(columnDatum, column,blankCount);
+        }
         return columnDatum.toArray();
     }
 
@@ -106,8 +109,7 @@ public class DataProcessor implements Runnable {
         return (rowCount * blankPercentage) / 100;
     }
 
-    private int calculateReoccurrenceCount(int rowCount, int reoccurrencePercentage) {
-        return (rowCount * reoccurrencePercentage) / 100;
+    private int calculateReoccurrenceCount(int rowCount, int reoccurrencePercentage) {return (rowCount * reoccurrencePercentage) / 100;
     }
 
     private List<Object> generateUniqueData(ColumnEntity column, Faker faker, int count) throws ParseException {
@@ -122,7 +124,6 @@ public class DataProcessor implements Runnable {
     }
 
     private void addReoccurrenceData(List<Object> columnDatum, ColumnEntity column, Faker faker, int count) throws ParseException {
-        if (count > 0) {
             if (column.getColumnRules().getReoccurrence() == 100) {
                 String data = dataProvider.getData(column.getTypeData(), column, faker);
                 for (int i = 0; i < count; i++) {
@@ -134,11 +135,10 @@ public class DataProcessor implements Runnable {
                     columnDatum.add(columnDatum.get(j));
                 }
             }
-        }
+
     }
 
     private void addBlankData(List<Object> columnDatum, ColumnEntity column, int count) {
-        if (count > 0) {
             if (column.getColumnRules().getBlank() == 100) {
                 for (int i = 0; i < count; i++) {
                     columnDatum.add(null);
@@ -149,7 +149,6 @@ public class DataProcessor implements Runnable {
                     columnDatum.add(j, null);
                 }
             }
-        }
     }
 
 }

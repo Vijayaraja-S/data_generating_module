@@ -17,5 +17,6 @@ public class ColumnEntity {
     private ColumnRules columnRules;
     private Integer ordinal;
     private String type;
+
 }
 

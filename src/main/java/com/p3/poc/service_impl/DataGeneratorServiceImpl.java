@@ -7,6 +7,7 @@ import com.p3.poc.bean.writer.WriterBean;
 import com.p3.poc.faker.DataProvider;
 import com.p3.poc.service.DataGeneratorService;
 
+import com.p3.poc.service_impl.metadata.MetaDataExtraction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,14 +35,16 @@ import java.util.concurrent.Executors;
 public class DataGeneratorServiceImpl implements DataGeneratorService {
     private final ExportProcess exportProcess;
     private final DataProvider dataProvider;
-
+    private final MetaDataExtraction metaDataExtraction;
     @Override
     public void createData(DataGeneratorBean requestBean) throws Exception {
         List<WriterBean> writerBeanList = exportProcess.getExportEngineList(requestBean);
         Faker faker = new Faker();
         List<Callable<Object>> callableList = new ArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        metaDataExtraction.schemaMetadataUpdate(requestBean.getSchemaName(),requestBean.getDatabaseName(),requestBean.getTableInfos().size(),requestBean.getOutputPath());
         for (TableEntity tableInfo : requestBean.getTableInfos()) {
+            metaDataExtraction.TableMetadataUpdate(tableInfo.getTableName(),requestBean.getSchemaName(),tableInfo.getColumnDetails(),requestBean.getDatabaseName(),requestBean.getOutputPath(),tableInfo.getTotalRowCount());
             WriterBean wBean = writerBeanList.stream()
                     .filter(writerBean -> writerBean.getTableName().equalsIgnoreCase(tableInfo.getTableName()))
                     .findFirst()
